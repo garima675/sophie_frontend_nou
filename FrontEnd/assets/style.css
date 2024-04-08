@@ -186,3 +186,25 @@ footer nav ul {
 	margin: 2em
 }
 
+/**filters**/
+
+#container-filters {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	column-gap: 11px;
+	margin-bottom: 49px;
+  }
+  .button-filter {
+	font-family: Syne;
+	font-size: 17px;
+	font-weight: 700;
+	line-height: 18px;
+	color: #1d6154;
+	border: 1.1px solid #1d6154;
+	background-color: #fffef8;
+	border-radius: 58px;
+	width: fit-content;
+	padding: 9px 21px;
+	cursor: pointer;
+  }
