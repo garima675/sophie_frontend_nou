@@ -1,0 +1,91 @@
+
+
+  
+#loginpage a {
+    text-decoration: underline;
+    color: #3D3D3D;
+    margin-bottom: 398px;
+
+  }
+
+#loginpage {
+  width: 51%;
+ margin:auto;
+padding-top: 56px;
+}
+
+ #loginpage > * {
+    text-align: center;
+  }
+  
+#loginpage input[type="email"],
+#loginpage input[type="password"] {
+  padding: 1.2px 19px;
+}
+.loginpage__form-password {
+    margin: 4em 233px 0.6em 0;
+  }
+
+.loginpage__form-mail{
+    margin: 2.1em 274px 0.6em 0;
+
+  }
+
+  input[type="submit"] {
+    font-family: "Syne";
+    font-weight: 700;
+    color: white;
+    background-color: #1d6154;
+    margin: 2.2em auto;
+    width: 178px;
+    text-align: center;
+    border-radius: 61px;
+  }
+  #loginpage,
+.loginpage__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 23 rem;
+}
+#loginpage input {
+    height: 49px;
+    font-size: 1.3em;
+    border: none;
+    box-shadow: 0px 5px 13px rgba(0, 0, 0, 0.09);
+    cursor: pointer;
+  }
+
+ /* Style for the modal login alert */
+.modal__login-alert {
+  background-color: #ff6666; 
+  color: white; 
+  padding: 30px; 
+  border: 2px solid black; 
+  border-radius: 15px; 
+  width: 300px; 
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.5); 
+  text-align: center; 
+  font-size: 18px; 
+  font-weight: bold; 
+}
+
+/* Style for the "Réessayer" button */
+.btn__tryId {
+  background-color: red; 
+  color: white; 
+  padding: 15px 30px; 
+  border: 2px solid black; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  font-size: 16px; 
+  font-weight: bold; 
+  margin-top: 20px; 
+}
+
+/* Hover effect for the "Réessayer" button */
+.btn__tryId:hover {
+  background-color: darkred; 
+}
+
