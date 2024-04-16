@@ -2,10 +2,16 @@
 
   
 #loginpage a {
-    text-decoration: underline;
+    text-decoration: none;
     color: #3D3D3D;
     margin-bottom: 398px;
+  
 
+
+  }
+
+  #loginpage a:hover{
+    background-color: black;
   }
 
 #loginpage {
@@ -56,6 +62,9 @@ padding-top: 56px;
     box-shadow: 0px 5px 13px rgba(0, 0, 0, 0.09);
     cursor: pointer;
   }
+  
+
+  
 
  /* Style for the modal login alert */
 .modal__login-alert {

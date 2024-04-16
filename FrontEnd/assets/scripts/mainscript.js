@@ -114,7 +114,7 @@ function showFilteredWorks(filteredWorks) {
       imgNode.setAttribute('src', work.imageUrl);
       //alt set to title property
       imgNode.setAttribute('alt', work.title);
-      //Creating figcaption element to dipplay title of work
+      //Creating figcaption element to display title of work
       const captionNode = document.createElement('figcaption');
       captionNode.textContent = work.title;
       //Img node and captionnode are apprended as child nodes to figurenode
@@ -125,7 +125,142 @@ function showFilteredWorks(filteredWorks) {
   });
 }
 
+// Function to display admin mode UI elements if user is logged in
+function adminPageAfterLogin(){
+  if(sessionStorage.getItem("token")){
+    displayAdminUI();
+    setupAdminActions();
+    
+  }
+}
+
+// Function to display admin UI elements
+function displayAdminUI() {
+  // Changing the text from login to logout
+  const loginElement = document.querySelector("#login");
+  loginElement.textContent = "Log out";
+// Adding a mordifier link and icon to edit the gallery
+  const editButtonTemplateHTML = `
+  <a href="#" class="edition-link"><i class="fa-regular fa-pen-to-square">
+  </i> Modifier</a>`;
+  const introSophieElement = document.querySelector("#introduction h2");
+   const galleryTitleElement = document.querySelector("#portfolio h2");
+   //Inserting the edit gallery link afrer the title of the gallery
+  galleryTitleElement.insertAdjacentHTML("afterend", editButtonTemplateHTML);
+  const editButtonGalleryElement = document.querySelector("#portfolio a");
+  //Adding classname to the edit gallery link
+  editButtonGalleryElement.classList.add("open-modal-link");
+
+//Adding a special black header to admin page
+  const adminHeader = `
+  <div class="edition_mode"><i class="fas fa-regular fa-pen-to-square fa-lg"></i>
+  <p>Mode édition</p></div>`;
+  const header = document.querySelector("header");
+  //Leaving a margin at the top of page for admin page header
+  header.style.marginTop = "6rem";
+  header.insertAdjacentHTML("beforebegin", adminHeader);
+}
+ function setupAdminActions(){
+
+// Adding event listner to the edit gallery link
+  const editButtonGallery = document.querySelector("#portfolio a");
+  editButtonGallery.addEventListener("click", function (event) {
+    
+    modalDeleteWorksView();
+    displayWorksModal();
+    modal.showModal();
+
+
+})} 
+
+
  
+
+ // Function to display delete works modal
+ function modalDeleteWorksView() {
+  
+  // Selecting element from the dom and storing in const modal container
+  const modalContainer = document.querySelector(".modal-wrapper-delete");
+
+//Making container for close button
+ const modalNavigation = document.createElement("div");
+  modalNavigation.classList.add(
+      "modal-nav"
+  );
+//Creating close modal button and its symbol
+  const closeButton = document.createElement("i");
+  closeButton.classList.add(
+      "fa-solid",
+      "fa-xmark",
+      "close-modal-button"
+  );
+//Creating headline for thr gallery of the modal 
+  const modalTitle = document.createElement("h3");
+  modalTitle.textContent = "Gallerie Photo";
+
+  //Creating a container for the gallery
+  const galleryContainer = document.createElement("div");
+  galleryContainer.id = "gallery-modal";
+
+  //Creating a button to go to the addition mode
+  const addButton = document.createElement("button");
+  addButton.classList.add(
+      "link-modal-add"
+  );
+  addButton.textContent = "Ajouter une photo";
+  //Append close button as child to the modal navigation(its container)
+ modalNavigation.appendChild(closeButton);
+ //Append the elements to the modal container
+  modalContainer.append(
+      modalNavigation,
+      modalTitle,
+      galleryContainer,
+      addButton
+  );
+}
+
+
+ 
+ //Function to display works in delete works modal
+ async function displayWorksModal() {
+  // clearing the gallery
+    const modalGallery = document.getElementById("gallery-modal");
+    while (modalGallery.firstChild) {
+        modalGallery.removeChild(modalGallery.firstChild);
+    }
+    // Waiting for function displayworks (fetch works api and assining the value to artworks array)
+    await displayWorks();
+    //Populating the modal gallery with works
+    //iterating over each item in array artworks
+    for (let modalWork of artworks) {
+      //Creating figure element and giving it a classname
+        const modalFigure = document.createElement("figure");
+        modalFigure.classList.add
+        ("modal-figure");
+        //creating a delete button
+        const modalDeleteButton = document.createElement("i");
+        // setting the id attribute to modalwork.id
+        modalDeleteButton.setAttribute("id", modalWork.id);
+        modalDeleteButton.classList.add
+        ("fa-solid", "fa-trash-can", "delete-work");
+        //Creating the element image
+        const modalImage = document.createElement("img");
+        //sets crossorigine attribute to anonymus
+        modalImage.setAttribute("crossorigin", "anonymous");
+        //set src attribute to imageurl
+        modalImage.setAttribute("src", modalWork.imageUrl);
+        //Set alt attribute to title of artswork
+        modalImage.alt = modalWork.title;
+        //Apprend modal figure as child of modalgallery
+        modalGallery.appendChild(modalFigure);
+        //Apprend deletebutton and modalimage as child of figure element
+        modalFigure.append(modalDeleteButton, modalImage);
+    }
+}
+
+
+
+
 
 
 
@@ -137,8 +272,9 @@ async function init(){
   //If there are is no token then it generatesfilterbuttons
   if (!sessionStorage.getItem("token")) {
     await generateFilterButtons(artworks);
-}
 
+}
+adminPageAfterLogin();
 }
 
 init();
