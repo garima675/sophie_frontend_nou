@@ -283,16 +283,17 @@ footer nav ul {
 	flex-wrap: wrap;
 	gap: 12px;
 	border-bottom: solid  #b3b3b3;
-	width: 27.1rem;
-	height: 100%;
-	margin: 2.9rem auto 2.rem auto;
-	padding-bottom: 1rem;
+	width: 25rem;
+	height: 90%;
+	margin-left: 130px;
+	padding-bottom: 4rem;
+	padding-top: 4rem;
 	display: flex;
+	
 	
  }
 
-.modal-wrapper-delete,
-.modal-wrapper-add {
+.modal-wrapper-delete {
   width: 100%;
   height: 100%;
   background-color: #ffffff;
@@ -301,6 +302,7 @@ footer nav ul {
   align-content: center;
   flex-direction: column;
 }
+
 .modal-figure {
 	max-width: 5rem;
 	max-height: 6rem;
@@ -316,8 +318,113 @@ footer nav ul {
 .modal-nav {
 	display: flex;
 	justify-content: flex-end;
-	width: 93%;
-	margin: 0.55 auto;
+	width: 99%;
+	margin: 0.72 auto;
   }
   
+  
+.modal-close-button {
+	font-size: 12px;
+	text-align: right;
+	cursor: pointer;
+  }
+
+  .delete-work {
+	position: absolute;
+	background-color: #000000;
+	padding: 4px;
+	border: none;
+	border-radius: 2px;
+	left: 54px;
+	top: 6px;
+	color: #ffffff;
+	font-size: 11px;
+  }
+
+  .link-modal-add
+{
+  width: text fit-content;
+  font-family: "Syne";
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 19px;
+  color: #ffffff;
+  background-color: #1d6154;
+  border: 0px;
+  border-radius: 60px;
+  padding: 10px 49px;
+  margin: auto;
+  cursor: pointer;
+  text-align: center;
+  margin-top: 10px;
+}
+  
+h3 {
+	font-family: "Work Sans";
+	font-weight: 400;
+	font-size: 26px;
+	line-height: 30px;
+	text-align: center;
+  }
+
+  .modal-wrapper-add {
+	width: 100%;
+	height: 100%;
+	background-color: #ffffff;
+	border-radius: 10px;
+	display: flex;
+	align-content: center;
+	flex-direction: column;
+  }
+
+  .modal-wrapper-add .modal-nav {
+	display: flex;
+	justify-content: space-between;
+  }
+  
+.go-back-button-addmodal {
+	font-size: 12px;
+	cursor: pointer;
+  }
+  
+.close-modal-button {
+	font-size: 12px;
+	text-align: right;
+	cursor: pointer;
+  }
+  
+.form-add-works {
+	margin: 32px 100px 32px 100px;
+	display: flex;
+	flex-direction: column;
+  }
+
+  .container-add-img {
+	height: 120px;
+	background-color: #e8f1f6;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 28px;
+	margin-bottom: 30px;
+  }
+
+  .container-add-img img {
+	width: 100px;
+	height:100%;
+	
+  }
+
+  .container-add-img label {
+	padding: 10px 33px;
+	font-size: 14px;
+	font-style: medium;
+	line-height: 16px;
+	color: #306685;
+	font-family: "Work Sans";
+	background-color: #cbd6dc;
+	border: none;
+	border-radius: 50px;
+	cursor: pointer;
+  }
   

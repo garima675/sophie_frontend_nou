@@ -165,13 +165,28 @@ function displayAdminUI() {
 // Adding event listner to the edit gallery link
   const editButtonGallery = document.querySelector("#portfolio a");
   editButtonGallery.addEventListener("click", function (event) {
-    
+    clearModalContent();
     modalDeleteWorksView();
     displayWorksModal();
     modal.showModal();
 
 
 })} 
+// function to clear the modal gallery
+function clearModalContent() {
+  const deleteWrapper = document.querySelector(".modal-wrapper-delete");
+  const addWrapper = document.querySelector(".modal-wrapper-add");
+  if (deleteWrapper) {
+      while (deleteWrapper.firstChild) {
+          deleteWrapper.removeChild(deleteWrapper.firstChild);
+      }
+  }
+  if (addWrapper) {
+      while (addWrapper.firstChild) {
+          addWrapper.removeChild(addWrapper.firstChild);
+      }
+  }
+}
 
 
  
@@ -192,7 +207,7 @@ function displayAdminUI() {
   closeButton.classList.add(
       "fa-solid",
       "fa-xmark",
-      "close-modal-button"
+      "modal-close-button"
   );
 //Creating headline for thr gallery of the modal 
   const modalTitle = document.createElement("h3");
@@ -256,16 +271,96 @@ function displayAdminUI() {
         //Apprend deletebutton and modalimage as child of figure element
         modalFigure.append(modalDeleteButton, modalImage);
     }
+
+  }
+  
+/**event-delete works on model when clicking on trash can */
+
+document.addEventListener("click", (event) => {
+  //checks if the event matches
+  if (event.target.matches(".delete-work")) {
+    event.preventDefault();
+    // Calls the api
+    deleteWorksByIdAPICall(event.target.id);
+     event.preventDefault();
+    refreshGallery();
+  }
+});
+//function for refeshing the gallery
+async function refreshGallery() {
+  await displayWorks();
+  displayWorksModal();
+}
+//api call to delete work
+function deleteWorksByIdAPICall(workId) {
+  fetch(`http://localhost:5678/api/works/${workId}`, {
+      method: "DELETE",
+      headers: {
+          "content-type": "application/Json",
+          authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
+  }).then((fetchResponse) => {
+      if (fetchResponse.status === 200) {
+          const targetElement = document.getElementById(workId);
+          if (targetElement) {
+              targetElement.parentNode.removeChild(targetElement);
+          }
+      }
+  });
 }
 
 
+//event:when clicking on close button the modal closes
+document.addEventListener("click", function(event) {
+  if (event.target.matches(".modal-close-button")) {
+    modal.close();
+    
+  }
+});
 
 
 
 
 
+//Event:when click on link modal button which links to additon modal
+document.addEventListener("click", function(event) {
+  if (event.target.matches(".link-modal-add")) {
+    event.preventDefault();
+    const modalWrapper = document.querySelector(".modal-wrapper-delete");
+    //Make delete modal ivisible
+    modalWrapper.style.display = "none";
+    //calls function to display and create additon modal form
+    createaddmodelAnddisplayform();
+    
+  }
+});
 
+ function createaddmodelAnddisplayform(){
+  const modalContainer = document.querySelector(".modal-wrapper-add");
+    modalContainer.style.display = null;
+    createModalHeader();
+    
+    
+}
 
+function createModalHeader() {
+  const modalContainer = document.querySelector(".modal-wrapper-add");
+  const headerContainer = document.createElement("div");
+  headerContainer.classList.add("modal-nav");
+  
+  const closeBtn = document.createElement("i");
+  closeBtn.classList.add
+  ("fa-solid", "fa-xmark", "close-modal-button");
+  const backButton = document.createElement("i");
+  backButton.classList.add
+  ("fa-solid", "fa-arrow-left", "go-back-button-addmodal");
+  const headerTitle = document.createElement("h3");
+  headerTitle.textContent = "Ajout photo";
+  headerContainer.append(backButton, closeBtn);
+  modalContainer.append(headerContainer, headerTitle);
+}
+
+ 
 //Trigger function on page load
 async function init(){
   await displayWorks();
