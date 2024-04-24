@@ -127,11 +127,10 @@ function showFilteredWorks(filteredWorks) {
 
 // Function to display admin mode UI elements if user is logged in
 function adminPageAfterLogin(){
-  if(sessionStorage.getItem("token")){
+
     displayAdminUI();
     setupAdminActions();
-    
-  }
+
 }
 
 // Function to display admin UI elements
@@ -172,7 +171,7 @@ function displayAdminUI() {
 
 
 })} 
-// function to clear the modal gallery
+// function to clear the modal 
 function clearModalContent() {
   const deleteWrapper = document.querySelector(".modal-wrapper-delete");
   const addWrapper = document.querySelector(".modal-wrapper-add");
@@ -283,7 +282,8 @@ document.addEventListener("click", (event) => {
     // Calls the api
     deleteWorksByIdAPICall(event.target.id);
      event.preventDefault();
-    refreshGallery();
+     displayAlertModal("photo supprimée avec succès");
+     refreshGallery();
   }
 });
 //function for refeshing the gallery
@@ -310,16 +310,13 @@ function deleteWorksByIdAPICall(workId) {
 }
 
 
-//event:when clicking on close button the modal closes
+//event:when clicking on close button  ofthe modal closes
 document.addEventListener("click", function(event) {
   if (event.target.matches(".modal-close-button")) {
     modal.close();
     
   }
 });
-
-
-
 
 
 //Event:when click on link modal button which links to additon modal
@@ -334,31 +331,411 @@ document.addEventListener("click", function(event) {
     
   }
 });
-
+// function to create and display addition form
  function createaddmodelAnddisplayform(){
   const modalContainer = document.querySelector(".modal-wrapper-add");
     modalContainer.style.display = null;
     createModalHeader();
+    addWorkFormCreationAndVerify();
     
     
 }
-
+//function to create header elements of add modal
 function createModalHeader() {
   const modalContainer = document.querySelector(".modal-wrapper-add");
+  //create container for go bcak and close button(for header)
   const headerContainer = document.createElement("div");
   headerContainer.classList.add("modal-nav");
+  //Create close button using font awusm
   
   const closeBtn = document.createElement("i");
+  //Giving classname to the close button
   closeBtn.classList.add
-  ("fa-solid", "fa-xmark", "close-modal-button");
+  ("fa-solid", "fa-xmark", "modal-close-button");
+  // Create go back button for going back to delete modal
   const backButton = document.createElement("i");
+  //Giving classname to the go back button
   backButton.classList.add
   ("fa-solid", "fa-arrow-left", "go-back-button-addmodal");
+  //Creating headline for addition modal
   const headerTitle = document.createElement("h3");
   headerTitle.textContent = "Ajout photo";
+//aprend backbutton and closebutton to container
   headerContainer.append(backButton, closeBtn);
+  //aprend header container and title to modal conatiner
   modalContainer.append(headerContainer, headerTitle);
 }
+// function to display form  for adding a work
+ function addWorkFormCreationAndVerify(){
+  const modalContainer = document.querySelector(".modal-wrapper-add");
+  //Creating form element for addition modal
+    const formElement = document.createElement("form");
+    //Giving a classname to the form element
+    formElement.classList.add("add-photo-information");
+    //calling a function to create form elements
+    createFormElements(formElement);
+    modalContainer.appendChild(formElement);
+    //calling a function to verify form element 
+    verifyFormInputs(formElement);
+    
+ }
+
+ // Function to create form elements
+function createFormElements(workForm) {
+  // Create a container for image input
+  const imgInputContainer = document.createElement("div");
+  imgInputContainer.classList.add("container-add-img");
+
+  // Create a container for information input
+  const infoInputContainer = document.createElement("div");
+  infoInputContainer.classList.add("container-form-information");
+
+  // Call functions to create image input and text input
+  createImageInput(imgInputContainer);
+  createTextInput(infoInputContainer);
+  
+  // Append created elements to the work form
+  workForm.append(imgInputContainer, infoInputContainer, createSubmitButton());
+}
+
+// Function to create image input
+function createImageInput(imageContainer) {
+  // Create icon preview element
+  const iconPreview = document.createElement("i");
+  iconPreview.classList.add("fa", "fa-regular", "fa-image");
+
+  // Create image preview element
+  const previewImage = document.createElement("img");
+  previewImage.classList.add("img-preview");
+  previewImage.style.display = "none";
+
+  // Create label for image input
+  const imageLabel = document.createElement("label");
+  imageLabel.setAttribute("for", "file");
+  imageLabel.classList.add("labelAddImage");
+  imageLabel.textContent = "+ Ajouter photo";
+
+  // Create file input element for image
+  const inputFile = document.createElement("input");
+  inputFile.type = "file";
+  inputFile.setAttribute("id", "file");
+  inputFile.setAttribute("accept", "image/png, image/jpeg");
+  inputFile.classList.add("input-img", "verify-form");
+  inputFile.required = true;
+
+  // Create information text element
+  const infoText = document.createElement("p");
+  infoText.classList.add("infor-addImage");
+  infoText.textContent = "jpg, png: max 4MB";
+
+  // Append created elements to the image container
+  imageContainer.append(
+      iconPreview,
+      previewImage,
+      imageLabel,
+      inputFile,
+      infoText
+  );
+}
+ 
+// Function to create text input for title and category
+function createTextInput(infoContainer) {
+  // Create label for title input
+  const titleLabel = document.createElement("label");
+  titleLabel.setAttribute("for", "title");
+  titleLabel.textContent = "Titre";
+
+  // Create text input element for title
+  const titleInput = document.createElement("input");
+  titleInput.setAttribute("type", "text");
+  titleInput.setAttribute("name", "title");
+  titleInput.setAttribute("id", "title");
+  titleInput.classList.add("verif-form");
+  titleInput.required = true;
+
+  // Create label for category select
+  const categoryLabel = document.createElement("label");
+  categoryLabel.setAttribute("for", "category");
+  categoryLabel.textContent = "Catégorie";
+
+  // Create select element for category
+  const categorySelect = document.createElement("select");
+  categorySelect.setAttribute("id", "selectCategory");
+  categorySelect.classList.add("verif-form");
+  categorySelect.required = true;
+
+  // Call function to set up category options
+  setupCategoryOptions(categorySelect);
+
+  // Append created elements to the information container
+  infoContainer.append(
+      titleLabel,
+      titleInput,
+      categoryLabel,
+      categorySelect
+  );
+}
+
+
+  
+// Function to set options for category select in addition form
+function setupCategoryOptions(categoryDropdown) {
+  fetchCategoriesAPICall()
+      .then(data => {
+          // Optionally add a default or placeholder category
+          data.unshift({
+              id: 0,
+              name: "",
+          });
+          // Populate the dropdown with categories
+          for (let optionItem of data) {
+              const option = document.createElement("option");
+              option.classList.add("cat-option");
+              option.setAttribute("id", optionItem.id.toString()); // Ensure ID is a string
+              option.setAttribute("name", optionItem.name);
+              option.textContent = optionItem.name;
+              categoryDropdown.append(option);
+          }
+      })
+      .catch(error => {
+          console.error("Error fetching categories:", error);
+          // Handle error (e.g., display an error message)
+      });
+}
+
+
+// Fetch Categories api call
+ async function fetchCategoriesAPICall() {
+  const response = await fetch("http://localhost:5678/api/categories");
+  if (!response.ok) {
+      throw new Error('Failed to fetch categories: ' + response.statusText);
+  }
+  return response.json();
+}
+
+
+
+// Function to create submit button
+function createSubmitButton() {
+  const submitButtonLabel = document.createElement("label");
+  submitButtonLabel.getAttribute("for", "js-validForm-btn");
+  submitButtonLabel.classList.add("js-add-works");
+  submitButtonLabel.textContent = "Valider";
+  submitButtonLabel.style.backgroundColor = "#A7A7A7";
+  const submitButton = document.createElement("input");
+  submitButton.setAttribute("type", "submit");
+  submitButton.setAttribute("id", "js-validForm-btn");
+  submitButton.style.display = "none";
+  submitButtonLabel.appendChild(submitButton);
+  return submitButtonLabel;
+}
+
+// Function to verify form input and to  show that the form is reday to submit
+function verifyFormInputs(workForm) {
+  //selecting the add works button
+  const submitControl = workForm.querySelector(".js-add-works");
+  //Selecting all the inputs which are required to verify the form
+  const requiredInputs = workForm.querySelectorAll(".verif-form[required]");
+  //For each input it adds event listner
+  requiredInputs.forEach(input => {
+      input.addEventListener("input", function () {
+        //whenever we fill the input it check if all the inputs are valid
+          if (workForm.checkValidity()) {
+            //if valid it changes the color of button(means it is ready for submission)
+              submitControl.style.backgroundColor = "#1D6154";
+              //otherwise it does not change
+          } else {
+              submitControl.style.backgroundColor = "#A7A7A7";
+          }
+      });
+  });
+}
+
+
+// Adding event listener whenever a change happens (value of input element changes)
+document.addEventListener("change", handleFileSelectionChange);
+
+// Function to handle file selection change
+function handleFileSelectionChange(changeEvent) {
+//if target value matches input for uploading images
+    if (changeEvent.target.matches(".input-img")) {
+      //it selects the first file
+        const selectedFile = changeEvent.target.files[0];
+        //selecting elements for manipulation
+        const imageUploadContainer = document.querySelector(".container-add-img");
+        const previewImageElement = imageUploadContainer.querySelector("img.img-preview");
+        const iconImagePreview = imageUploadContainer.querySelector("i.fa-image");
+        const vectorImagePreview = imageUploadContainer.querySelector("svg.svg-inline--fa.fa-image");
+        const addImageButtonLabel = document.querySelector(".labelAddImage");
+        const imageInfoParagraph = document.querySelector(".infor-addImage");
+        const validFormats = ["image/jpeg", "image/png"];
+//if selected file is less then or equal to 4 mb
+        if (selectedFile.size <= 4 * 1024 * 1024) {
+            showImagePreview(selectedFile, previewImageElement, iconImagePreview, vectorImagePreview, addImageButtonLabel, imageInfoParagraph);
+            readFile(selectedFile, previewImageElement);
+            verifyImageFormat(selectedFile, validFormats);
+        } else {
+          //if not
+          displayAlertModal("La taille maximale autorisée est de 4 Mo pour chaque fichier.");
+        }
+    }
+}
+
+function showImagePreview(selectedFile, previewElement, iconPreview, vectorPreview, buttonLabel, infoText) {
+  //Makes iconpreview,vectorview,previewelement invisible
+  if (iconPreview) iconPreview.style.display = "none";
+  if (vectorPreview) vectorPreview.style.display = "none";
+  if (previewElement) {
+      previewElement.style.display = "block";
+      //set the path of preview element to url of selected image
+      previewElement.src = URL.createObjectURL(selectedFile);
+      //make buttonlabel,indotext invisible
+      buttonLabel.style.display = "none";
+      infoText.style.display = "none";
+  }
+}
+//verifiles the format of the selected file
+function verifyImageFormat(fileData, permittedFormats) {
+  //if the format is wrong
+  if (!permittedFormats.includes(fileData.type)) {
+    
+      displayModalAlert("SEULES LES IMAGES AUX FORMATS .JPG OU .PNG SONT ADMISES");
+  }
+}
+
+// function reads the content of the selected file and displays it as a preview in the specified previewElement.
+function readFile(fileData, previewElement) { //fileData: The file object representing the selected image file.
+  const fileReader = new FileReader();
+  //Read the content of filedata(selected image file)
+  fileReader.readAsDataURL(fileData);
+  //when reading is completed
+  fileReader.onload = function () {
+    //sets the result in previewevent to show
+      previewElement.src = fileReader.result;
+  };
+}
+
+
+
+//event:when clicking on add-works buttton
+document.addEventListener("click", function(event) {
+  if (event.target.matches(".js-add-works")) {
+    event.preventDefault();
+    processFormSubmit();
+    
+  }
+});
+
+function processFormSubmit() {
+  const worksFormElement = document.querySelector(".add-photo-information");
+  //checks if the form elements are valid
+  if (worksFormElement.checkValidity()) {
+      postNewWork();
+      goBacktodeletemodal();
+      refreshGallery();
+  }
+}
+
+
+// Function to send data to add a work
+function postNewWork() {
+  //Get the value of title from the form
+  const workTitle = document.getElementById("title").value;
+  const categoryDropdown = document.getElementById("selectCategory");
+  //Get the value of selected category
+  const selectedOption = categoryDropdown.selectedIndex;
+  const chosenCategory = categoryDropdown.options[selectedOption].id;
+  //getting the selected image
+  const imageFile = document.getElementById("file").files[0];
+  //making an object for image,selected category and title
+  const workData = new FormData();
+  workData.append("image", imageFile);
+  workData.append("title", workTitle);
+  workData.append("category", chosenCategory);
+  //retrieving token
+  const userToken = sessionStorage.getItem("token");
+//calling  post api for adding new work
+  addWorkAPICall(workData, userToken)
+      .then(response => {
+          if (response.ok) {
+              displayAlertModal("Photo ajoutée avec succès");
+          } else {
+              console.error("Error sending data: ", response.status);
+          }
+      })
+      .catch(error => console.error("Error sending data: ", error));
+}
+
+//Add work api call
+ async function addWorkAPICall(workData, userToken) {
+  const response = await fetch("http://localhost:5678/api/works", {
+      method: "POST",
+      headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${userToken}`,
+      },
+      body: workData,
+  });
+
+  return response; // Return the fetch response for further processing.
+}
+
+// Function to go back from add work modal to delete works modal
+ function goBacktodeletemodal() {
+  const addModalContainer = document.querySelector(".modal-wrapper-add");
+  addModalContainer.style.display = "none";
+  while (addModalContainer.firstChild) {
+      addModalContainer.removeChild(addModalContainer.firstChild);
+  }
+  const deleteModalContainer = document.querySelector(".modal-wrapper-delete");
+  deleteModalContainer.style.display = null;
+}
+
+
+//event:when clicking on go-back-button 
+document.addEventListener("click", function(event) {
+  if (event.target.matches(".go-back-button-addmodal")) {
+    goBacktodeletemodal();
+    
+  }
+});
+
+
+// Function to display the alert message modal
+function displayAlertModal(message) {
+  // Retrieve the modal dialog element
+  const alertModal = document.querySelector(".modal__popup-alert");
+  const alertMessage = document.getElementById("alertMessage");
+
+  // Check if alertMessage element exists
+  if (alertMessage) {
+      // Set alert message
+      alertMessage.textContent = message;
+  } else {
+      console.error("Element with id 'alertMessage' not found.");
+      return;
+  }
+
+  // Show the modal dialog
+  alertModal.showModal();
+}
+
+// Function to close the alert message modal
+function closeModal() {
+  // Retrieve the modal dialog element
+  const alertModal = document.querySelector(".modal__popup-alert");
+
+  // Close the modal dialog
+  alertModal.close();
+}
+
+// Event listener for the "Réessayer" button in the alert message modal
+document.getElementById("tryAgainBtn").addEventListener("click", function() {
+  // Close the alert message modal when the button is clicked
+  closeModal();
+});
+
+
 
  
 //Trigger function on page load
@@ -367,9 +744,12 @@ async function init(){
   //If there are is no token then it generatesfilterbuttons
   if (!sessionStorage.getItem("token")) {
     await generateFilterButtons(artworks);
+    }
 
-}
-adminPageAfterLogin();
+  if(sessionStorage.getItem("token")){
+  adminPageAfterLogin();
+  }
+
 }
 
 init();

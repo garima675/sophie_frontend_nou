@@ -1,12 +1,5 @@
 
   
-  
-
-
-
-
-
-
 // Function to handle form submission after the DOM content is loaded
 document.addEventListener("DOMContentLoaded", function() {
     // Retrieve the form element from the DOM
